@@ -1,0 +1,23 @@
+<form
+  method="post"
+  hx-post="{% if form_action == 'category-edit' %}{% url 'category-edit' form_action_id %}{% else %}{% url 'categories' %}{% endif %}"
+  hx-target="#category-list"
+  hx-swap="outerHTML"
+>
+  {% csrf_token %}
+  <div class="form-grid">
+    {% for field in form %}
+      <label class="form-label">
+        <span>{{ field.label }}</span>
+        {{ field }}
+        {% if field.errors %}
+          <div class="form-error">{{ field.errors|striptags }}</div>
+        {% endif %}
+      </label>
+    {% endfor %}
+  </div>
+  <button class="btn primary" type="submit">{{ submit_label }}</button>
+  {% if form_action == 'category-edit' %}
+    <a class="btn ghost" href="{% url 'categories' %}">Cancel</a>
+  {% endif %}
+</form>

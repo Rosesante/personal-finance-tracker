@@ -1,0 +1,26 @@
+{% extends "tracker/base.html" %}
+
+{% block title %}Budgets | Finance Tracker{% endblock %}
+
+{% block content %}
+  <section class="hero">
+    <div>
+      <h1>Budgets</h1>
+      <p>Set spending limits and stay in control.</p>
+    </div>
+  </section>
+
+  <section class="grid-2">
+    <div class="card">
+      <h3>Create Budget</h3>
+      <div id="budget-form">
+        {% include "tracker/partials/budget_form_inner.html" %}
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Active Budgets</h3>
+      {% include "tracker/partials/budget_list.html" %}
+    </div>
+  </section>
+{% endblock %}

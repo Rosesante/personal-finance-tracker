@@ -1,0 +1,20 @@
+<div id="category-list" class="list">
+  {% for category in categories %}
+    <div class="list-row">
+      <div>
+        <div class="list-title">{{ category.name }}</div>
+        <div class="muted">{{ category.kind|title }}</div>
+      </div>
+      <button
+        class="btn ghost"
+        hx-get="{% url 'category-edit' category.id %}"
+        hx-target="#category-form"
+        hx-swap="innerHTML"
+      >
+        Edit
+      </button>
+    </div>
+  {% empty %}
+    <div class="empty">No categories yet.</div>
+  {% endfor %}
+</div>

@@ -1,0 +1,17 @@
+{% load finance_extras %}
+<div id="budget-list" class="list">
+  {% for budget in budgets %}
+    <div class="list-row">
+      <div>
+        <div class="list-title">{{ budget.name }}</div>
+        <div class="muted">
+          {{ budget.period|title }} • {{ budget.category.name|default:"All categories" }} •
+          {{ budget.start_date }} - {{ budget.end_date }}
+        </div>
+      </div>
+      <div class="list-amount">{{ budget.amount|money:"TZS" }}</div>
+    </div>
+  {% empty %}
+    <div class="empty">No budgets yet.</div>
+  {% endfor %}
+</div>

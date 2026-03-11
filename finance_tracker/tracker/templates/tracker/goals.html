@@ -1,0 +1,26 @@
+{% extends "tracker/base.html" %}
+
+{% block title %}Goals | Finance Tracker{% endblock %}
+
+{% block content %}
+  <section class="hero">
+    <div>
+      <h1>Goals</h1>
+      <p>Plan milestones and track progress in real time.</p>
+    </div>
+  </section>
+
+  <section class="grid-2">
+    <div class="card">
+      <h3>Create Goal</h3>
+      <div id="goal-form">
+        {% include "tracker/partials/goal_form_inner.html" %}
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Active Goals</h3>
+      {% include "tracker/partials/goal_list.html" %}
+    </div>
+  </section>
+{% endblock %}

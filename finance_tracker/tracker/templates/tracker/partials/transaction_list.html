@@ -1,0 +1,20 @@
+{% load finance_extras %}
+<div id="transaction-list" class="list">
+  {% for transaction in transactions %}
+    <div class="list-row">
+      <div>
+        <div class="list-title">{{ transaction.description|default:"Transaction" }}</div>
+        <div class="muted">
+          {{ transaction.account.name }} • {{ transaction.category.name|default:"Uncategorized" }} •
+          {{ transaction.occurred_at }}
+        </div>
+      </div>
+      <div class="list-amount {{ transaction.kind }}">
+        {% if transaction.kind == "expense" %}-{% endif %}
+        {{ transaction.amount|money:"TZS" }}
+      </div>
+    </div>
+  {% empty %}
+    <div class="empty">No transactions yet.</div>
+  {% endfor %}
+</div>

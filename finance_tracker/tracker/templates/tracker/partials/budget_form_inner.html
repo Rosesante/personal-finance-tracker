@@ -1,0 +1,20 @@
+<form
+  method="post"
+  hx-post="{% url 'budgets' %}"
+  hx-target="#budget-list"
+  hx-swap="outerHTML"
+>
+  {% csrf_token %}
+  <div class="form-grid">
+    {% for field in form %}
+      <label class="form-label">
+        <span>{{ field.label }}</span>
+        {{ field }}
+        {% if field.errors %}
+          <div class="form-error">{{ field.errors|striptags }}</div>
+        {% endif %}
+      </label>
+    {% endfor %}
+  </div>
+  <button class="btn primary" type="submit">Add Budget</button>
+</form>

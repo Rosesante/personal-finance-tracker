@@ -1,0 +1,170 @@
+{% extends "tracker/base.html" %}
+{% load finance_extras %}
+
+{% block title %}Dashboard | Finance Tracker{% endblock %}
+
+{% block content %}
+  <section class="hero">
+    <div>
+      <h1>Dashboard</h1>
+      <p>Track balances, momentum, and recent activity in one calm view.</p>
+    </div>
+    <div class="hero-chip">Updated: {{ now|default:"Today" }}</div>
+  </section>
+
+  {% if budget_alert %}
+    <div class="alert">
+      <div>
+        <div class="alert-title">Budget Alert</div>
+        <div class="alert-text">
+          {{ budget_alert.message }}
+          You spent {{ budget_alert.expense_total|money:"TZS" }} against a budget of
+          {{ budget_alert.budget_total|money:"TZS" }}.
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  <section class="grid-3">
+    <div class="card accent-teal">
+      <h3>Total Balance</h3>
+      <div class="metric">{{ total_balance|money:"TZS" }}</div>
+      <div class="muted">Across all accounts</div>
+    </div>
+    <div class="card accent-amber">
+      <h3>This Month Income</h3>
+      <div class="metric">{{ income_total|money:"TZS" }}</div>
+      <div class="muted">From {{ accounts|length }} accounts</div>
+    </div>
+    <div class="card accent-coral">
+      <h3>This Month Expenses</h3>
+      <div class="metric">{{ expense_total|money:"TZS" }}</div>
+      <div class="muted">Keep an eye on trends</div>
+    </div>
+  </section>
+
+  <section class="grid-2">
+    <div class="card">
+      <h3>Accounts</h3>
+      <div class="list">
+        {% for account in accounts %}
+          <div class="list-row">
+            <div>
+              <div class="list-title">{{ account.name }}</div>
+              <div class="muted">{{ account.bank_name|default:"Manual account" }}</div>
+            </div>
+            <div class="list-amount">{{ account.balance|money:account.currency }}</div>
+          </div>
+        {% empty %}
+          <div class="empty">No accounts yet.</div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Recent Activity</h3>
+      <div class="list">
+        {% for transaction in recent_transactions %}
+          <div class="list-row">
+            <div>
+              <div class="list-title">{{ transaction.description|default:"Transaction" }}</div>
+              <div class="muted">
+                {{ transaction.account.name }} • {{ transaction.occurred_at }}
+              </div>
+            </div>
+            <div class="list-amount {{ transaction.kind }}">
+              {% if transaction.kind == "expense" %}-{% endif %}
+              {{ transaction.amount|money:"TZS" }}
+            </div>
+          </div>
+        {% empty %}
+          <div class="empty">No transactions yet.</div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <section class="grid-2">
+    <div class="card">
+      <h3>Income vs Expenses</h3>
+      <canvas id="incomeExpenseChart" height="220"></canvas>
+    </div>
+    <div class="card">
+      <h3>Spend Trend</h3>
+      <canvas id="spendTrendChart" height="220"></canvas>
+    </div>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+  <script>
+    const chartColors = {
+      income: "rgba(20, 184, 166, 0.8)",
+      expenses: "rgba(251, 113, 133, 0.85)",
+      border: "rgba(148, 163, 184, 0.2)",
+    };
+
+    fetch("{% url 'chart-income-expense' %}")
+      .then((res) => res.json())
+      .then((data) => {
+        new Chart(document.getElementById("incomeExpenseChart"), {
+          type: "bar",
+          data: {
+            labels: data.labels,
+            datasets: [
+              {
+                label: "Income",
+                data: data.income,
+                backgroundColor: chartColors.income,
+              },
+              {
+                label: "Expenses",
+                data: data.expenses,
+                backgroundColor: chartColors.expenses,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { labels: { color: "#e2e8f0" } },
+            },
+            scales: {
+              x: { ticks: { color: "#94a3b8" }, grid: { color: chartColors.border } },
+              y: { ticks: { color: "#94a3b8" }, grid: { color: chartColors.border } },
+            },
+          },
+        });
+      });
+
+    fetch("{% url 'chart-spend-trend' %}")
+      .then((res) => res.json())
+      .then((data) => {
+        new Chart(document.getElementById("spendTrendChart"), {
+          type: "line",
+          data: {
+            labels: data.labels,
+            datasets: [
+              {
+                label: "Expenses",
+                data: data.expenses,
+                borderColor: chartColors.expenses,
+                backgroundColor: "rgba(251, 113, 133, 0.25)",
+                tension: 0.35,
+                fill: true,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { labels: { color: "#e2e8f0" } },
+            },
+            scales: {
+              x: { ticks: { color: "#94a3b8" }, grid: { color: chartColors.border } },
+              y: { ticks: { color: "#94a3b8" }, grid: { color: chartColors.border } },
+            },
+          },
+        });
+      });
+  </script>
+{% endblock %}

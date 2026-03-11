@@ -1,0 +1,17 @@
+{% load finance_extras %}
+<div id="goal-list" class="list">
+  {% for goal in goals %}
+    <div class="list-row">
+      <div>
+        <div class="list-title">{{ goal.name }}</div>
+        <div class="muted">
+          Target: {{ goal.target_amount }} •
+          {% if goal.target_date %}Due {{ goal.target_date }}{% else %}No due date{% endif %}
+        </div>
+      </div>
+      <div class="list-amount">{{ goal.current_amount|money:"TZS" }}</div>
+    </div>
+  {% empty %}
+    <div class="empty">No goals yet.</div>
+  {% endfor %}
+</div>

@@ -1,0 +1,54 @@
+{% extends "tracker/base.html" %}
+
+{% block title %}Import Transactions | Finance Tracker{% endblock %}
+
+{% block content %}
+  <section class="hero">
+    <div>
+      <h1>Import Transactions</h1>
+      <p>Upload a CSV with headers: Date, Description, Amount.</p>
+    </div>
+  </section>
+
+  <section class="grid-2">
+    <div class="card">
+      <h3>Upload CSV</h3>
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-grid">
+          {% for field in form %}
+            <label class="form-label">
+              <span>{{ field.label }}</span>
+              {{ field }}
+              {% if field.errors %}
+                <div class="form-error">{{ field.errors|striptags }}</div>
+              {% endif %}
+            </label>
+          {% endfor %}
+        </div>
+        <button class="btn primary" type="submit">Import</button>
+      </form>
+      {% if error %}
+        <div class="form-error" style="margin-top: 12px;">{{ error }}</div>
+      {% endif %}
+      {% if result %}
+        {% if result.error %}
+          <div class="form-error" style="margin-top: 12px;">{{ result.error }}</div>
+        {% else %}
+          <div class="hero-chip" style="margin-top: 12px;">
+            Imported {{ result.imported }} • Skipped {{ result.skipped }}
+          </div>
+        {% endif %}
+      {% endif %}
+    </div>
+
+    <div class="card">
+      <h3>CSV Format</h3>
+      <div class="muted">Example:</div>
+      <pre class="code-sample">Date,Description,Amount
+2026-03-01,Salary,2500000
+2026-03-02,Groceries,-45000</pre>
+      <div class="muted">Amounts can be positive (income) or negative (expense).</div>
+    </div>
+  </section>
+{% endblock %}

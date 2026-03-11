@@ -1,0 +1,43 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}Finance Tracker{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="{% static 'tracker/css/style.css' %}" />
+    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+  </head>
+  <body>
+    <div class="page">
+      <header class="site-header">
+        <div class="brand">
+          <div class="brand-mark">FT</div>
+          <div>
+            <div class="brand-title">Finance Tracker</div>
+            <div class="brand-subtitle">Your money, always in motion</div>
+          </div>
+        </div>
+        <nav class="nav">
+          <a href="{% url 'dashboard' %}">Dashboard</a>
+          <a href="{% url 'accounts' %}">Accounts</a>
+          <a href="{% url 'income' %}">Income</a>
+          <a href="{% url 'expenses' %}">Expenses</a>
+          <a href="{% url 'budgets' %}">Budgets</a>
+          <a href="{% url 'categories' %}">Categories</a>
+          <a href="{% url 'goals' %}">Goals</a>
+        </nav>
+      </header>
+
+      <main class="content">
+        {% block content %}{% endblock %}
+      </main>
+    </div>
+  </body>
+</html>

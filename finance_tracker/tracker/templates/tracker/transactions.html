@@ -1,0 +1,26 @@
+{% extends "tracker/base.html" %}
+
+{% block title %}{% if kind == "income" %}Income{% else %}Expenses{% endif %} | Finance Tracker{% endblock %}
+
+{% block content %}
+  <section class="hero">
+    <div>
+      <h1>{% if kind == "income" %}Income{% else %}Expenses{% endif %}</h1>
+      <p>Track every inflow and outflow with instant updates.</p>
+    </div>
+  </section>
+
+  <section class="grid-2">
+    <div class="card">
+      <h3>Add {% if kind == "income" %}Income{% else %}Expense{% endif %}</h3>
+      <div id="transaction-form">
+        {% include "tracker/partials/transaction_form_inner.html" %}
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Recent {% if kind == "income" %}Income{% else %}Expenses{% endif %}</h3>
+      {% include "tracker/partials/transaction_list.html" %}
+    </div>
+  </section>
+{% endblock %}

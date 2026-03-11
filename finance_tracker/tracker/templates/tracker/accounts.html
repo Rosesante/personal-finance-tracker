@@ -1,0 +1,31 @@
+{% extends "tracker/base.html" %}
+
+{% block title %}Accounts | Finance Tracker{% endblock %}
+
+{% block content %}
+  <section class="hero">
+    <div>
+      <h1>Accounts</h1>
+      <p>Add your accounts and connect them to bank syncs when available.</p>
+    </div>
+    <div class="hero-actions">
+      <a class="btn ghost" href="{% url 'import-transactions' %}">Import CSV</a>
+      <a class="btn ghost" href="{% url 'bank-sync' %}">Sync Now</a>
+      <a class="btn primary" href="{% url 'bank-connect' %}">Connect Bank</a>
+    </div>
+  </section>
+
+  <section class="grid-2">
+    <div class="card">
+      <h3>Add Account</h3>
+      <div id="account-form">
+        {% include "tracker/partials/account_form_inner.html" %}
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>All Accounts</h3>
+      {% include "tracker/partials/account_list.html" %}
+    </div>
+  </section>
+{% endblock %}

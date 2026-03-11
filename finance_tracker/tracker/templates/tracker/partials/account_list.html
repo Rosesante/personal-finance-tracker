@@ -1,0 +1,29 @@
+{% load finance_extras %}
+<div id="account-list" class="list">
+  {% for account in accounts %}
+    <div class="list-row">
+      <div>
+        <div class="list-title">{{ account.name }}</div>
+        <div class="muted">
+          {{ account.account_type|title }} • {{ account.bank_name|default:"Manual account" }}
+          {% if account.is_connected %} • Synced{% endif %}
+        </div>
+      </div>
+      <div class="list-actions">
+        <div class="list-amount">{{ account.balance|money:account.currency }}</div>
+        <form
+          method="post"
+          action="{% url 'account-delete' account.id %}"
+          hx-post="{% url 'account-delete' account.id %}"
+          hx-target="#account-list"
+          hx-swap="outerHTML"
+        >
+          {% csrf_token %}
+          <button class="btn ghost" type="submit">Delete</button>
+        </form>
+      </div>
+    </div>
+  {% empty %}
+    <div class="empty">No accounts added yet.</div>
+  {% endfor %}
+</div>
